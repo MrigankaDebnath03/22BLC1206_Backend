@@ -1,192 +1,163 @@
-```markdown
-# File Sharing API
 
-A secure REST API for user authentication, file management, and sharing built with Go, PostgreSQL, and Redis. Deployed on Render.
+---
 
-## API Endpoints
+# 22BLC1206_Backend
 
-### 1. User Registration
-**POST** `/register`  
-Registers a new user.
+A secure REST API for user authentication, file management, and file sharing, built with Go, PostgreSQL, and Redis. Deployed on Render.
 
-**Example Request:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john_doe", "email":"john@example.com", "password":"secret"}'
-```
+## Endpoints
 
-**Example Response:**
-```json
-{
-  "id": 1,
-  "username": "john_doe",
-  "email": "john@example.com",
-  "created_at": "2023-07-15T12:34:56Z"
-}
-```
+### User
 
-### 2. User Login
-**POST** `/login`  
-Authenticates a user and returns a JWT token.
+- **Register**  
+  **POST** `/register`  
+  **Request:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"john_doe", "email":"john@example.com", "password":"secret"}'
+  ```
+  **Response:**
+  ```json
+  {
+    "id": 1,
+    "username": "john_doe",
+    "email": "john@example.com",
+    "created_at": "2023-07-15T12:34:56Z"
+  }
+  ```
 
-**Example Request:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john_doe", "password":"secret"}'
-```
+- **Login**  
+  **POST** `/login`  
+  **Request:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"john_doe", "password":"secret"}'
+  ```
+  **Response:**
+  ```json
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expires_at": "2023-07-16T12:34:56Z"
+  }
+  ```
 
-**Example Response:**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "expires_at": "2023-07-16T12:34:56Z"
-}
-```
+### File Management
 
-### 3. File Upload
-**POST** `/upload`  
-Uploads a file (multipart/form-data). Requires authentication.
-
-**Example Request:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/upload \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "file=@/path/to/file.jpg" \
-  -F "is_public=true"
-```
-
-**Example Response:**
-```json
-{
-  "id": 5,
-  "filename": "file.jpg",
-  "status": "uploaded",
-  "is_public": true
-}
-```
-
-### 4. File Download
-**GET** `/download?id=<FILE_ID>`  
-Downloads a file. Checks permissions.
-
-**Example Request:**
-```bash
-curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  --output downloaded_file.jpg
-```
-
-### 5. List Files
-**GET** `/files`  
-Lists all accessible files for the user.
-
-**Example Request:**
-```bash
-curl -X GET https://two2blc1206backend.onrender.com/files \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-**Example Response:**
-```json
-[
+- **Upload**  
+  **POST** `/upload` (multipart/form-data; requires JWT)  
+  **Request:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/upload \
+    -H "Authorization: Bearer <JWT_TOKEN>" \
+    -F "file=@/path/to/file.jpg" \
+    -F "is_public=true"
+  ```
+  **Response:**
+  ```json
   {
     "id": 5,
-    "name": "file.jpg",
-    "size": 1024,
-    "content_type": "image/jpeg",
-    "uploaded_at": "2023-07-15T12:35:00Z",
+    "filename": "file.jpg",
+    "status": "uploaded",
     "is_public": true
   }
-]
-```
+  ```
 
-### 6. File Sharing
-**POST** `/share`  
-Shares a file with another user.
+- **Download**  
+  **GET** `/download?id=<FILE_ID>` (requires JWT)  
+  **Request:**
+  ```bash
+  curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
+    -H "Authorization: Bearer <JWT_TOKEN>" \
+    --output downloaded_file.jpg
+  ```
 
-**Example Request:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/share \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{"file_id":5, "shared_with":2}'
-```
+- **List Files**  
+  **GET** `/files` (requires JWT)  
+  **Request:**
+  ```bash
+  curl -X GET https://two2blc1206backend.onrender.com/files \
+    -H "Authorization: Bearer <JWT_TOKEN>"
+  ```
+  **Response:**
+  ```json
+  [
+    {
+      "id": 5,
+      "name": "file.jpg",
+      "size": 1024,
+      "content_type": "image/jpeg",
+      "uploaded_at": "2023-07-15T12:35:00Z",
+      "is_public": true
+    }
+  ]
+  ```
 
-**Response:** 201 Created
+- **Share**  
+  **POST** `/share` (requires JWT)  
+  **Request:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/share \
+    -H "Authorization: Bearer <JWT_TOKEN>" \
+    -H "Content-Type: application/json" \
+    -d '{"file_id":5, "shared_with":2}'
+  ```
+  **Response:** `201 Created`
 
-### 7. Delete File
-**DELETE** `/delete?id=<FILE_ID>`  
-Deletes a file owned by the user.
-
-**Example Request:**
-```bash
-curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-**Response:** 204 No Content
+- **Delete**  
+  **DELETE** `/delete?id=<FILE_ID>` (requires JWT)  
+  **Request:**
+  ```bash
+  curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
+    -H "Authorization: Bearer <JWT_TOKEN>"
+  ```
+  **Response:** `204 No Content`
 
 ## Local Setup
 
-1. **Clone the Repository**
-```bash
-git clone https://github.com/MrigankaDebnath03/22BLC1206_Backend.git
-cd 22BLC1206_Backend
-```
+1. **Clone the Repo**
+   ```bash
+   git clone https://github.com/MrigankaDebnath03/22BLC1206_Backend.git
+   cd 22BLC1206_Backend
+   ```
 
-2. **Set Environment Variables**  
-Create `.env` file:
-```env
-JWT_SECRET=your_secret_key
-```
+2. **Configure Environment**  
+   Create a `.env` file:
+   ```env
+   JWT_SECRET=your_secret_key
+   ```
 
-3. **Start Services with Docker**
-```bash
-docker-compose up
-```
+3. **Start Services**
+   ```bash
+   docker-compose up
+   ```
 
-4. **Access API**  
-The API will be available at `http://localhost:8080`.
+4. **API Access**  
+   Visit: [http://localhost:8080](http://localhost:8080)
 
-## Using Deployed API
+## Deployed API
 
-The API is deployed at:  
-**Base URL**: `https://two2blc1206backend.onrender.com`
+- **Base URL:**  
+  `https://two2blc1206backend.onrender.com`
 
-**Usage Tips:**
-- First request may take ~30s due to Render's cold start
-- Use the provided endpoints with your JWT token
-- Example authenticated request:
-```bash
-curl -X GET https://two2blc1206backend.onrender.com/files \
-  -H "Authorization: Bearer <YOUR_TOKEN>"
-```
+*Note: The first request may take ~30s due to Render's cold start.*
 
 ## Automated Testing
 
-The `automated-api-test.py` file performs end-to-end testing:
+1. **Install Dependencies**
+   ```bash
+   pip install pytest requests
+   ```
 
-**Requirements:**
-```bash
-pip install pytest requests
-```
+2. **Run Tests**
+   ```bash
+   python3 automated-api-test.py
+   ```
+   Follow the prompts to select a test file.
 
-**Run Tests:**
-1. Execute the script:
-```bash
-python3 automated-api-test.py
-```
-2. Select a test file when prompted
+## Contributing
 
-**Features:**
-- Tests all API endpoints
-- Automatic cleanup
-- Real-time progress reporting
-- Multi-user testing
+Visit our [GitHub Repository](https://github.com/MrigankaDebnath03/22BLC1206_Backend.git) to contribute or view the source code.
 
-## GitHub Repository
-Find source code and contribute:  
-[https://github.com/MrigankaDebnath03/22BLC1206_Backend.git](https://github.com/MrigankaDebnath03/22BLC1206_Backend.git)
-```
+---
