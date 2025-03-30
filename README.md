@@ -1,17 +1,15 @@
-
----
-
+```markdown
 # 22BLC1206_Backend
 
 A secure REST API for user authentication, file management, and file sharing, built with Go, PostgreSQL, and Redis. Deployed on Render.
 
 ## Endpoints
 
-### User
+### User Endpoints
 
 - **Register**  
   **POST** `/register`  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X POST https://two2blc1206backend.onrender.com/register \
     -H "Content-Type: application/json" \
@@ -29,7 +27,7 @@ A secure REST API for user authentication, file management, and file sharing, bu
 
 - **Login**  
   **POST** `/login`  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X POST https://two2blc1206backend.onrender.com/login \
     -H "Content-Type: application/json" \
@@ -43,11 +41,11 @@ A secure REST API for user authentication, file management, and file sharing, bu
   }
   ```
 
-### File Management
+### File Management Endpoints
 
-- **Upload**  
+- **Upload File**  
   **POST** `/upload` (multipart/form-data; requires JWT)  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X POST https://two2blc1206backend.onrender.com/upload \
     -H "Authorization: Bearer <JWT_TOKEN>" \
@@ -64,9 +62,9 @@ A secure REST API for user authentication, file management, and file sharing, bu
   }
   ```
 
-- **Download**  
+- **Download File**  
   **GET** `/download?id=<FILE_ID>` (requires JWT)  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
     -H "Authorization: Bearer <JWT_TOKEN>" \
@@ -75,7 +73,7 @@ A secure REST API for user authentication, file management, and file sharing, bu
 
 - **List Files**  
   **GET** `/files` (requires JWT)  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X GET https://two2blc1206backend.onrender.com/files \
     -H "Authorization: Bearer <JWT_TOKEN>"
@@ -94,9 +92,9 @@ A secure REST API for user authentication, file management, and file sharing, bu
   ]
   ```
 
-- **Share**  
+- **Share File**  
   **POST** `/share` (requires JWT)  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X POST https://two2blc1206backend.onrender.com/share \
     -H "Authorization: Bearer <JWT_TOKEN>" \
@@ -105,36 +103,67 @@ A secure REST API for user authentication, file management, and file sharing, bu
   ```
   **Response:** `201 Created`
 
-- **Delete**  
+- **Delete File**  
   **DELETE** `/delete?id=<FILE_ID>` (requires JWT)  
-  **Request:**
+  **Request Example:**
   ```bash
   curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
     -H "Authorization: Bearer <JWT_TOKEN>"
   ```
   **Response:** `204 No Content`
 
+## API Usage Examples for Deployed API
+
+- **User Registration:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"alice", "email":"alice@example.com", "password":"mypassword"}'
+  ```
+
+- **User Login:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"alice", "password":"mypassword"}'
+  ```
+
+- **File Upload:**
+  ```bash
+  curl -X POST https://two2blc1206backend.onrender.com/upload \
+    -H "Authorization: Bearer <JWT_TOKEN>" \
+    -F "file=@/local/path/to/photo.png" \
+    -F "is_public=true"
+  ```
+
+- **File Download:**
+  ```bash
+  curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
+    -H "Authorization: Bearer <JWT_TOKEN>" \
+    --output myphoto.png
+  ```
+
 ## Local Setup
 
-1. **Clone the Repo**
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/MrigankaDebnath03/22BLC1206_Backend.git
    cd 22BLC1206_Backend
    ```
 
-2. **Configure Environment**  
+2. **Set Environment Variables**  
    Create a `.env` file:
    ```env
    JWT_SECRET=your_secret_key
    ```
 
-3. **Start Services**
+3. **Start Services with Docker**
    ```bash
    docker-compose up
    ```
 
-4. **API Access**  
-   Visit: [http://localhost:8080](http://localhost:8080)
+4. **Access Local API**  
+   The API is available at: [http://localhost:8080](http://localhost:8080)
 
 ## Deployed API
 
@@ -143,21 +172,33 @@ A secure REST API for user authentication, file management, and file sharing, bu
 
 *Note: The first request may take ~30s due to Render's cold start.*
 
-## Automated Testing
+## Testing
+
+### Postman Testing
+
+- **Setup:**
+  1. Create a new Postman collection.
+  2. Add requests for each endpoint using the deployed base URL.
+  3. Create an environment in Postman with the following variables:
+     - `base_url`: `https://two2blc1206backend.onrender.com`
+     - `jwt_token`: (your JWT token obtained after login)
+  4. Use the provided request examples as templates.
+  5. Send requests to verify responses.
+
+### Automated Testing
 
 1. **Install Dependencies**
    ```bash
    pip install pytest requests
    ```
 
-2. **Run Tests**
+2. **Run Automated Tests**
    ```bash
-   python3 automated-api-test.py
+   pytest automated-api-test.py -v --log-level=DEBUG
    ```
-   Follow the prompts to select a test file.
+   This command runs the end-to-end tests with verbose output and debug-level logging, and performs automatic cleanup after testing.
 
 ## Contributing
 
-Visit our [GitHub Repository](https://github.com/MrigankaDebnath03/22BLC1206_Backend.git) to contribute or view the source code.
-
----
+Contributions are welcome! Check out our [GitHub Repository](https://github.com/MrigankaDebnath03/22BLC1206_Backend.git) for more details.
+```
