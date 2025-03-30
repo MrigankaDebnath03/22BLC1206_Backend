@@ -31,6 +31,63 @@ A secure REST API for user authentication, file management, and file sharing, bu
 | `/share` | POST | Share a file with another user | JWT |
 | `/delete` | DELETE | Delete a file | JWT |
 
+## 🌐 Deployed API
+
+- **Base URL:** https://two2blc1206backend.onrender.com
+
+### Endpoint Examples
+
+**Register a new user:**
+```bash
+curl -X POST https://two2blc1206backend.onrender.com/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"john_doe", "email":"john@example.com", "password":"secret"}'
+```
+
+**Login:**
+```bash
+curl -X POST https://two2blc1206backend.onrender.com/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"john_doe", "password":"secret"}'
+```
+
+**Upload a file:**
+```bash
+curl -X POST https://two2blc1206backend.onrender.com/upload \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "file=@/path/to/file.jpg" \
+  -F "is_public=true"
+```
+
+**Download a file:**
+```bash
+curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  --output downloaded_file.jpg
+```
+
+**List all files:**
+```bash
+curl -X GET https://two2blc1206backend.onrender.com/files \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+**Share a file:**
+```bash
+curl -X POST https://two2blc1206backend.onrender.com/share \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"file_id":5, "shared_with":2}'
+```
+
+**Delete a file:**
+```bash
+curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+> **Note:** The first request may take approximately 30 seconds due to Render's cold start mechanism.
+
 ## 🔍 API Usage Examples
 
 ### User Management
@@ -109,18 +166,12 @@ curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
 
 3. **Start the services**
    ```bash
-   docker-compose up
+   docker-compose up --build
    ```
 
 4. **Access the API**
    
    The API will be available at http://localhost:8080
-
-## 🌐 Deployed API
-
-- **Base URL:** https://two2blc1206backend.onrender.com
-
-> **Note:** The first request may take approximately 30 seconds due to Render's cold start mechanism.
 
 ## 🧪 Testing
 
