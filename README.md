@@ -1,7 +1,6 @@
 # 22BLC1206_Backend
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A secure REST API for user authentication, file management, and file sharing, built with Go, PostgreSQL, and Redis. Deployed on Render.
 
@@ -34,6 +33,7 @@ A secure REST API for user authentication, file management, and file sharing, bu
 ## 🌐 Deployed API
 
 - **Base URL:** https://two2blc1206backend.onrender.com
+- **Local Development URL:** http://localhost:8080
 
 ### Endpoint Examples
 
@@ -88,60 +88,6 @@ curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
 
 > **Note:** The first request may take approximately 30 seconds due to Render's cold start mechanism.
 
-## 🔍 API Usage Examples
-
-### User Management
-
-**Register a new user:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/register \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john_doe", "email":"john@example.com", "password":"secret"}'
-```
-
-**Login:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"john_doe", "password":"secret"}'
-```
-
-### File Management
-
-**Upload a file:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/upload \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -F "file=@/path/to/file.jpg" \
-  -F "is_public=true"
-```
-
-**Download a file:**
-```bash
-curl -X GET https://two2blc1206backend.onrender.com/download?id=5 \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  --output downloaded_file.jpg
-```
-
-**List all files:**
-```bash
-curl -X GET https://two2blc1206backend.onrender.com/files \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
-
-**Share a file:**
-```bash
-curl -X POST https://two2blc1206backend.onrender.com/share \
-  -H "Authorization: Bearer <JWT_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{"file_id":5, "shared_with":2}'
-```
-
-**Delete a file:**
-```bash
-curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
-  -H "Authorization: Bearer <JWT_TOKEN>"
-```
 
 ## 💻 Local Development
 
@@ -166,12 +112,69 @@ curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
 
 3. **Start the services**
    ```bash
-   docker-compose up --build
+   docker-compose up
    ```
 
 4. **Access the API**
    
    The API will be available at http://localhost:8080
+
+   ## 🔍 API Usage Examples
+   
+
+### User Management
+
+**Register a new user:**
+```bash
+curl -X POST http://localhost:8080/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"john_doe", "email":"john@example.com", "password":"secret"}'
+```
+
+**Login:**
+```bash
+curl -X POST http://localhost:8080/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"john_doe", "password":"secret"}'
+```
+
+### File Management
+
+**Upload a file:**
+```bash
+curl -X POST http://localhost:8080/upload \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -F "file=@/path/to/file.jpg" \
+  -F "is_public=true"
+```
+
+**Download a file:**
+```bash
+curl -X GET http://localhost:8080/download?id=5 \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  --output downloaded_file.jpg
+```
+
+**List all files:**
+```bash
+curl -X GET http://localhost:8080/files \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
+**Share a file:**
+```bash
+curl -X POST http://localhost:8080/share \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"file_id":5, "shared_with":2}'
+```
+
+**Delete a file:**
+```bash
+curl -X DELETE http://localhost:8080/delete?id=5 \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
+
 
 ## 🧪 Testing
 
@@ -180,7 +183,7 @@ curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
 1. Create a new Postman collection
 2. Add requests for each endpoint using the deployed base URL
 3. Create an environment with variables:
-   - `base_url`: `https://two2blc1206backend.onrender.com`
+   - `base_url`: `https://two2blc1206backend.onrender.com` or `http://localhost:8080`
    - `jwt_token`: (JWT token obtained after login)
 4. Use the provided request examples as templates
 5. Send requests to verify responses
@@ -197,19 +200,6 @@ curl -X DELETE https://two2blc1206backend.onrender.com/delete?id=5 \
    pytest automated-api-test.py -v --log-level=DEBUG
    ```
 
-## 👥 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ## 🔗 Links
 
