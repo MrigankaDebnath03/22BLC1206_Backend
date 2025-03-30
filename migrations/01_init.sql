@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS files (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    size BIGINT NOT NULL,
+    content_type VARCHAR(100) NOT NULL,
+    uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    is_public BOOLEAN DEFAULT false
+);
+
+CREATE TABLE IF NOT EXISTS file_shares (
+    file_id INTEGER REFERENCES files(id),
+    user_id INTEGER REFERENCES users(id),
+    PRIMARY KEY (file_id, user_id)
+);
